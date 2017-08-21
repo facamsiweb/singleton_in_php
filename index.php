@@ -1,19 +1,16 @@
 <?php
 
- 	function autoload ($class_name) 
- 	{
- 		include "classes/" . $class_name . ".php";
- 	}
+require_once __DIR__ . "/autoload.php";
 
- 	spl_autoload_register('autoload');
- 	$instance_primos = Primos::getInstance();
+use Exercise\Primos;
 
- 	$data = file_get_contents("numbers.json");
-	$json_numbers = json_decode($data, true);
 
-	$numbers = $json_numbers[0]['Numeros'];
-			
- 	
+$instance_primos = Primos::getInstance();
+
+$data = file_get_contents("numbers.json");
+$json_numbers = json_decode($data, true);
+
+$numbers = $json_numbers[0]['Numeros'];
 ?>
 
 <!DOCTYPE html>
@@ -42,13 +39,15 @@
 
 		foreach ( $numbers as $number ) 
 		{
-			if ( $instance_primos->is_primo($number) ) 
-
-				echo "<h3>" . $number . " es primo</h3>" . "";	
-
-			else		
-				echo  "<h3 id='no_primo'>" . $number . " no es primo</h3>" . " ";
-			
+		    try {
+                if ( $instance_primos->isPrimo($number) ) {
+                    echo "<h3>" . $number . " es primo</h3>" . "";
+                } else {
+                    echo  "<h3 id='no_primo'>" . $number . " no es primo</h3>" . " ";
+                }
+            } catch (Exception $e) {
+		        echo "<h2><strong>{$e->getMessage()}</strong></h2>";
+            }
 		} 
 
  	?>
